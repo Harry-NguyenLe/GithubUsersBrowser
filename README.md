@@ -61,7 +61,7 @@ An Android app that allows administrators to browse and explore users from the G
 
 1. Clone this repository
 2. Open in **Android Studio**
-3. Copy and add your Github's PAT to local.properties following this format: GITHUB_API_TOKEN=<Your GitHub Personal Access Token> 
+3. Copy and add your Github's PAT to local.properties following the format below
 ![Add Token Example](images/add_token.png)
 4. Build and Run on an emulator or real device (API 24+ recommended)
 
