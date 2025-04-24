@@ -47,7 +47,7 @@ An Android app that allows administrators to browse and explore users from the G
 
 ---
 
-## 🧪 Unit & UI Testing
+## 🧪 Unit Testing
 
 - ✅ Paging source tested
 - ✅ Datastore source tested
