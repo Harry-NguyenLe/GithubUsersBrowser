@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +27,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -104,12 +101,12 @@ fun GithubUserDetailUiContent(
                     ) {
                         StatItem(
                             icon = R.drawable.baseline_people_24,
-                            count = uiState.followers.toString(),
+                            count = uiState.followers,
                             label = "Follower"
                         )
                         StatItem(
                             icon = R.drawable.baseline_cloud_circle_24,
-                            count = uiState.following.toString(),
+                            count = uiState.following,
                             label = "Following"
                         )
                     }

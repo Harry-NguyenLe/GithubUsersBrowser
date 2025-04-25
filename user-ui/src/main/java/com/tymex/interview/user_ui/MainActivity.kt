@@ -1,10 +1,12 @@
 package com.tymex.interview.user_ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material3.Scaffold
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tymex.interview.user_ui.navigation.graph.RootNavGraph
@@ -12,9 +14,11 @@ import com.tymex.interview.user_ui.theme.HomeAssesmentHaiNLTTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModel()
     private var isLoggedIn: Boolean = false
+
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +33,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             HomeAssesmentHaiNLTTheme {
-                RootNavGraph(
-                    isLoggedIn = isLoggedIn,
-                    exitApp = {
-                        finish()
-                    },
-                    navController = rememberAnimatedNavController(),
-                )
+                Scaffold {
+                    RootNavGraph(
+                        isLoggedIn = isLoggedIn,
+                        exitApp = {
+                            finish()
+                        },
+                        navController = rememberAnimatedNavController(),
+                    )
+                }
             }
         }
     }
