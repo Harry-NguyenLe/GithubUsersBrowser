@@ -8,7 +8,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.tymex.interview.user_ui.navigation.graph.RootNavGraph
-import com.tymex.interview.user_ui.theme.HomeAssesmentHaiNLTTheme
+import com.tymex.interview.user_ui.theme.GithubUsersBrowserTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            HomeAssesmentHaiNLTTheme {
+            GithubUsersBrowserTheme {
                 RootNavGraph(
                     isLoggedIn = isLoggedIn,
                     exitApp = {

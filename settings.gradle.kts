@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HomeAssesmentHaiNLT"
+rootProject.name = "GithubUsersBrowser"
 include(":app")
 include(":core")
 include(":user-data")
