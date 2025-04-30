@@ -97,9 +97,6 @@ dependencies {
     testImplementation(libs.mockk.core)
     testImplementation(libs.mockk.android)
 
-    // Turbine
-    testImplementation(libs.turbine)
-
     // Mockwebserver
     testImplementation(libs.test.okhttp.mockwebserver)
 

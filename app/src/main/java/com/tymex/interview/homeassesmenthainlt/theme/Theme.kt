@@ -1,4 +1,4 @@
-package com.tymex.interview.user_ui.theme
+package com.tymex.interview.homeassesmenthainlt.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -40,20 +40,31 @@ android {
 }
 
 dependencies {
+    implementation(project(":user-domain"))
     implementation(project(":user-data"))
     implementation(project(":user-ui"))
-    implementation (project(":core"))
+    implementation(project(":core"))
+    testImplementation(project(":shared-test"))
 
     // Core Android & Kotlin
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // Compose Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.accompanist.navigation.animation)
+
+    // Composable
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 
     // Koin (Dependency Injection) - Implement BOM first
     implementation(platform(libs.koin.bom))
-    implementation(libs.bundles.koin) // Includes koin-android, koin-androidx-compose
+    implementation(libs.bundles.koin)
+    implementation(libs.androidx.material3.android) // Includes koin-android, koin-androidx-compose
 
     // Testing (Unit Tests) - Use bundle
     testImplementation(libs.bundles.unit.test)
@@ -63,6 +74,11 @@ dependencies {
 
     // Testing (Android Instrumented Tests) - Use bundle
     androidTestImplementation(libs.bundles.android.test)
+    // Turbine
+    testImplementation(libs.turbine)
+    // MockK for mocking
+    testImplementation(libs.mockk.core)
+    testImplementation(libs.mockk.android)
     // Use Compose BOM forandroidTestImplementation as well
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.bundles.compose.test) // Includes compose-ui-test-junit4
