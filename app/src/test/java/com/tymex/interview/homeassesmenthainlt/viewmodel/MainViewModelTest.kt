@@ -1,16 +1,16 @@
-package com.tymex.interview.user_ui.viewmodel
+package com.tymex.interview.homeassesmenthainlt.viewmodel
 
 import app.cash.turbine.test
+import com.tymex.interview.homeassesmenthainlt.MainViewModel
 import com.tymex.interview.shared_test.base.BaseUnitTest
 import com.tymex.interview.user_domain.usecase.GetLoginUserUseCase
-import com.tymex.interview.user_ui.MainViewModel
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)

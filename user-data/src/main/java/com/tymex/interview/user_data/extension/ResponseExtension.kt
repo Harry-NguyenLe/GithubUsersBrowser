@@ -1,7 +1,7 @@
 package com.tymex.interview.user_data.extension
 
-import com.tymex.interview.core.utils.Resource
 import com.tymex.interview.core.model.ResponseModel
+import com.tymex.interview.core.utils.Resource
 import retrofit2.Response
 import java.io.IOException
 import java.net.UnknownHostException

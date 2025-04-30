@@ -17,14 +17,14 @@ class ListUserRepositoryImpl(
 
     override fun getUsers(): Flow<PagingData<User>> {
         return Pager(
-                config = PagingConfig(
-                    pageSize = GITHUB_DEFAULT_PAGE_SIZE,
-                    enablePlaceholders = false
-                ),
-                pagingSourceFactory = {
-                    ListUserPagingSource(apiService, dispatcher)
-                }
-            ).flow
-        }
+            config = PagingConfig(
+                pageSize = GITHUB_DEFAULT_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                ListUserPagingSource(apiService, dispatcher)
+            }
+        ).flow
     }
+}
 

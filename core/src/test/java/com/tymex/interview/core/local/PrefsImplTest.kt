@@ -6,9 +6,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.preferencesOf
-import com.tymex.interview.shared_test.base.BaseUnitTest
 import com.tymex.interview.core.utils.IS_LOGGED_IN
 import com.tymex.interview.core.utils.USERNAME
+import com.tymex.interview.shared_test.base.BaseUnitTest
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

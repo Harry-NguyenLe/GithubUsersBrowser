@@ -30,4 +30,4 @@ data class UserDetailResponse(
 
     @Json(name = "following")
     val following: Int?,
-): ResponseModel
+) : ResponseModel

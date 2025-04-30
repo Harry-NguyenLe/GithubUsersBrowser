@@ -18,7 +18,7 @@ import org.junit.Before
 import kotlin.test.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ListUserRepositoryImplTest: BaseUnitTest() {
+class ListUserRepositoryImplTest : BaseUnitTest() {
 
     private lateinit var repository: ListUserRepositoryImpl
     private lateinit var apiService: ApiService

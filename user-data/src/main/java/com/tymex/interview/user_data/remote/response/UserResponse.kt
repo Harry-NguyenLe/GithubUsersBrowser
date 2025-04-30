@@ -21,4 +21,4 @@ data class UserResponse(
 
     @Json(name = "url")
     val url: String? = null,
-): ResponseModel
+) : ResponseModel

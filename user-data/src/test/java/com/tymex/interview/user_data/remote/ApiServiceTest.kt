@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class ApiServiceTest: BaseUnitTest() {
+class ApiServiceTest : BaseUnitTest() {
 
     private lateinit var apiService: ApiService
 

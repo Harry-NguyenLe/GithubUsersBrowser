@@ -7,7 +7,6 @@ import com.tymex.interview.shared_test.base.BaseUnitTest
 import com.tymex.interview.user_data.dummy.dummyUserResponse
 import com.tymex.interview.user_data.mapper.toDomain
 import com.tymex.interview.user_data.remote.ApiService
-import com.tymex.interview.user_data.remote.response.UserResponse
 import com.tymex.interview.user_domain.model.User
 import io.mockk.coEvery
 import io.mockk.mockk

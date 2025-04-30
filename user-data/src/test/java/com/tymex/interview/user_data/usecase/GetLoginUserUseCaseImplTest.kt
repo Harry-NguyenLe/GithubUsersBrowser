@@ -11,7 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class GetLoginUserUseCaseImplTest: BaseUnitTest() {
+class GetLoginUserUseCaseImplTest : BaseUnitTest() {
 
     private lateinit var useCase: GetLoginUserUseCaseImpl
     private val prefs = mockk<Prefs>()

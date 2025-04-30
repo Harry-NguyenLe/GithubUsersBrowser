@@ -1,4 +1,4 @@
-package com.tymex.interview.user_ui
+package com.tymex.interview.homeassesmenthainlt
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,8 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.tymex.interview.homeassesmenthainlt.theme.GithubUsersBrowserTheme
 import com.tymex.interview.user_ui.navigation.graph.RootNavGraph
-import com.tymex.interview.user_ui.theme.GithubUsersBrowserTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

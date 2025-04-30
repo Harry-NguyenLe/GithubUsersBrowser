@@ -5,11 +5,10 @@ import com.tymex.interview.shared_test.base.BaseUnitTest
 import com.tymex.interview.user_data.dummy.dummyUserDetail
 import com.tymex.interview.user_data.repository.UserDetailRepository
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
-
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GetUserDetailUseCaseImplTest : BaseUnitTest() {

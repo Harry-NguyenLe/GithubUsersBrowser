@@ -1,6 +1,5 @@
 package com.tymex.interview.user_ui.di
 
-import com.tymex.interview.user_ui.MainViewModel
 import com.tymex.interview.user_ui.screen.detail.GithubUserDetailsViewModel
 import com.tymex.interview.user_ui.screen.list.GithubUsersViewModel
 import com.tymex.interview.user_ui.screen.login.AuthViewModel
@@ -11,5 +10,4 @@ val viewModelModule = module {
     viewModel { GithubUsersViewModel(get()) }
     viewModel { GithubUserDetailsViewModel(get()) }
     viewModel { AuthViewModel(get()) }
-    viewModel { MainViewModel(get()) }
 }
