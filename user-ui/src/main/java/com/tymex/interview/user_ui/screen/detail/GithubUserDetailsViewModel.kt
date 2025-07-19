@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tymex.interview.core.utils.Resource
 import com.tymex.interview.core.utils.formatCountAbbreviated
-import com.tymex.interview.core.utils.orZero
 import com.tymex.interview.user_domain.usecase.GetUserDetailUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
