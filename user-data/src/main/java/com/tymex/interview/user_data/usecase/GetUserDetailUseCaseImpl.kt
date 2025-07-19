@@ -1,5 +1,6 @@
 package com.tymex.interview.user_data.usecase
 
+import android.util.Log
 import com.tymex.interview.core.utils.Resource
 import com.tymex.interview.user_data.repository.UserDetailRepository
 import com.tymex.interview.user_domain.model.UserDetail
@@ -10,6 +11,7 @@ class GetUserDetailUseCaseImpl(
 ) : GetUserDetailUseCase {
     override suspend fun invoke(userName: String): Resource<UserDetail> {
         return try {
+            Log.i("GetUserDetailUseCaseImpl", "invoke: $userName")
             val result = repo.getUserDetail(userName)
             Resource.Success(result)
         } catch (e: Exception) {
