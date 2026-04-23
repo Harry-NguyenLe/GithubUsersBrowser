@@ -3,7 +3,14 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     id("jacoco")
+    id("com.google.gms.google-services")
 }
+
+fun Project.ciSecret(name: String): String? =
+    providers.environmentVariable(name).orNull ?: (findProperty(name) as String?)
+
+val coverageVariant = "debug"
+val coverageVariantTaskName = "Debug"
 
 jacoco {
     toolVersion = "0.8.9"
@@ -20,36 +27,55 @@ tasks.withType<Test>().configureEach {
 tasks.register<JacocoReport>("jacocoTestReport") {
     description = "Generates the HTML documentation for this project."
     group = JavaBasePlugin.DOCUMENTATION_GROUP
-    dependsOn("testDebugUnitTest")
+    dependsOn("test${coverageVariantTaskName}UnitTest")
 
     reports {
         xml.required.set(true)
         html.required.set(true)
     }
 
-    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+    val variantTree = fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/$coverageVariant")) {
         exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
     }
 
-    classDirectories.setFrom(debugTree)
+    classDirectories.setFrom(variantTree)
     sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
-    executionData.setFrom(fileTree(buildDir) {
-        include("jacoco/testDebugUnitTest.exec")
-    })
+    executionData.setFrom(layout.buildDirectory.file("jacoco/test${coverageVariantTaskName}UnitTest.exec"))
 }
 
 android {
-    namespace = "com.tymex.interview.homeassesmenthainlt"
+    namespace = "com.githubusersbrowser"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.tymex.interview.homeassesmenthainlt"
+        applicationId = "com.githubusersbrowser"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            val signingStoreFile = project.ciSecret("SIGNING_STORE_FILE")
+            val signingStorePassword = project.ciSecret("SIGNING_STORE_PASSWORD")
+            val signingKeyAlias = project.ciSecret("SIGNING_KEY_ALIAS")
+            val signingKeyPassword = project.ciSecret("SIGNING_KEY_PASSWORD")
+
+            if (
+                !signingStoreFile.isNullOrBlank() &&
+                !signingStorePassword.isNullOrBlank() &&
+                !signingKeyAlias.isNullOrBlank() &&
+                !signingKeyPassword.isNullOrBlank()
+            ) {
+                storeFile = file(signingStoreFile)
+                storePassword = signingStorePassword
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
+            }
+        }
     }
 
     buildTypes {
@@ -59,6 +85,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (
+                !project.ciSecret("SIGNING_STORE_FILE").isNullOrBlank() &&
+                !project.ciSecret("SIGNING_STORE_PASSWORD").isNullOrBlank() &&
+                !project.ciSecret("SIGNING_KEY_ALIAS").isNullOrBlank() &&
+                !project.ciSecret("SIGNING_KEY_PASSWORD").isNullOrBlank()
+            ) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
@@ -69,6 +103,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -79,6 +114,10 @@ dependencies {
     implementation(project(":user-ui"))
     implementation(project(":core"))
     testImplementation(project(":shared-test"))
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
     // Core Android & Kotlin
     implementation(libs.androidx.core.ktx)

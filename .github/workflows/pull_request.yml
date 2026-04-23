@@ -1,35 +1,154 @@
-name: Run test
+name: CI/CD
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - release
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      - release
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        module: [ core, user-data, user-domain, user-ui, app ]
+        module: [core, user-data, user-domain, user-ui, app]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
-          cache: 'gradle'
+          cache: gradle
 
-      - name: Grant permission for gradlew
-        run: chmod +x gradlew
+      - name: Resolve CI target
+        shell: bash
+        run: |
+          TARGET_BRANCH="${GITHUB_BASE_REF:-$GITHUB_REF_NAME}"
 
-      - name: Run unit tests for :${{ matrix.module }}
-        run: ./gradlew :${{ matrix.module }}:testDebugUnitTest
+          if [[ "$TARGET_BRANCH" == "release" ]]; then
+            echo "BUILD_VARIANT=Release" >> "$GITHUB_ENV"
+          else
+            echo "BUILD_VARIANT=Debug" >> "$GITHUB_ENV"
+          fi
 
-      - name: Run lint for :${{ matrix.module }}
-        run: ./gradlew :${{ matrix.module }}:lintDebug
+      - name: Write Firebase config
+        shell: bash
+        run: |
+          if [[ -n '${{ secrets.GOOGLE_SERVICES_JSON }}' ]]; then
+            printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
+          fi
+
+      - name: Run unit tests
+        run: ./gradlew :${{ matrix.module }}:test${BUILD_VARIANT}UnitTest
+
+      - name: Run lint
+        run: ./gradlew :${{ matrix.module }}:lint${BUILD_VARIANT}
+
+  distribute:
+    if: github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Firebase CLI
+        run: npm install --global firebase-tools
+
+      - name: Resolve distribution target
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF_NAME" == "release" ]]; then
+            echo "BUILD_VARIANT=Release" >> "$GITHUB_ENV"
+            echo "APK_PATH=app/build/outputs/apk/release/app-release.apk" >> "$GITHUB_ENV"
+          else
+            echo "BUILD_VARIANT=Debug" >> "$GITHUB_ENV"
+            echo "APK_PATH=app/build/outputs/apk/debug/app-debug.apk" >> "$GITHUB_ENV"
+          fi
+
+      - name: Write Firebase config
+        shell: bash
+        run: |
+          if [[ -z '${{ secrets.GOOGLE_SERVICES_JSON }}' ]]; then
+            echo "Missing GOOGLE_SERVICES_JSON repository secret." >&2
+            exit 1
+          fi
+
+          printf '%s' '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
+
+      - name: Validate Firebase secrets
+        shell: bash
+        run: |
+          if [[ -z '${{ secrets.FIREBASE_APP_ID }}' ]]; then
+            echo "Missing FIREBASE_APP_ID repository secret." >&2
+            exit 1
+          fi
+
+          if [[ -z '${{ secrets.FIREBASE_TOKEN }}' ]]; then
+            echo "Missing FIREBASE_TOKEN repository secret." >&2
+            exit 1
+          fi
+
+      - name: Decode release keystore
+        if: github.ref_name == 'release'
+        shell: bash
+        run: |
+          if [[ -z '${{ secrets.ANDROID_KEYSTORE_BASE64 }}' ]]; then
+            echo "Missing ANDROID_KEYSTORE_BASE64 repository secret." >&2
+            exit 1
+          fi
+
+          if [[ -z '${{ secrets.ANDROID_KEYSTORE_PASSWORD }}' ]]; then
+            echo "Missing ANDROID_KEYSTORE_PASSWORD repository secret." >&2
+            exit 1
+          fi
+
+          if [[ -z '${{ secrets.ANDROID_KEY_PASSWORD }}' ]]; then
+            echo "Missing ANDROID_KEY_PASSWORD repository secret." >&2
+            exit 1
+          fi
+
+          printf '%s' '${{ secrets.ANDROID_KEYSTORE_BASE64 }}' | base64 --decode > "$RUNNER_TEMP/githubuserbrowser.jks"
+          echo "SIGNING_STORE_FILE=$RUNNER_TEMP/githubuserbrowser.jks" >> "$GITHUB_ENV"
+          echo "SIGNING_KEY_ALIAS=upload-key" >> "$GITHUB_ENV"
+
+      - name: Build APK
+        if: github.ref_name == 'release'
+        env:
+          SIGNING_STORE_FILE: ${{ env.SIGNING_STORE_FILE }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ env.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew :app:assemble${BUILD_VARIANT}
+
+      - name: Build APK
+        if: github.ref_name != 'release'
+        run: ./gradlew :app:assemble${BUILD_VARIANT}
+
+      - name: Distribute APK
+        run: |
+          firebase appdistribution:distribute "${APK_PATH}" \
+            --app "${{ secrets.FIREBASE_APP_ID }}" \
+            --groups "QA" \
+            --token "${{ secrets.FIREBASE_TOKEN }}"

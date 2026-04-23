@@ -1,10 +1,23 @@
+import java.io.FileInputStream
+import java.util.Properties
+
+fun getLocalProperty(key: String, project: Project, defaultValue: String = ""): String {
+    val properties = Properties()
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(FileInputStream(localPropertiesFile))
+        return properties.getProperty(key, defaultValue)
+    }
+    return defaultValue
+}
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = "com.tymex.interview.user_data"
+    namespace = "com.githubusersbrowser.user_data"
     compileSdk = 35
 
     defaultConfig {
@@ -12,13 +25,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        buildConfigField(
+            "String",
+            "API_BASE_URL",
+            "\"${getLocalProperty("API_BASE_URL", project, "https://api.github.com/")}\""
+        )
     }
 
     buildTypes {
-        debug {
-            buildConfigField("String", "API_BASE_URL", "\"https://api.github.com/\"")
-        }
-
         release {
             isMinifyEnabled = false
             proguardFiles(

@@ -63,7 +63,42 @@ An Android app that allows administrators to browse and explore users from the G
 2. Open in **Android Studio**
 3. Copy and add your Github's PAT to local.properties following the format below
 ![Add Token Example](images/add_token.png)
-4. Build and Run on an emulator or real device (API 24+ recommended)
+4. Add `google-services.json` for package `com.githubusersbrowser`
+5. Build and Run on an emulator or real device (API 24+ recommended)
+
+---
+
+## 🔥 Firebase Setup
+
+This project currently uses a single Firebase Android app for package `com.githubusersbrowser`.
+
+Because of that, the project no longer uses `dev` or `staging` product flavors. CI/CD builds:
+
+- `Debug` for non-`release` branches
+- `Release` for the `release` branch
+
+### Repository secrets
+
+Add these repository-level secrets:
+
+- `GOOGLE_SERVICES_JSON`
+  Store the full `google-services.json` content for `com.githubusersbrowser`.
+- `FIREBASE_APP_ID`
+  Store the Firebase App ID for `com.githubusersbrowser`.
+- `FIREBASE_TOKEN`
+  Repository secret used by Firebase App Distribution.
+- `ANDROID_KEYSTORE_BASE64`
+  Base64-encoded content of the release keystore file.
+- `ANDROID_KEYSTORE_PASSWORD`
+  Password for the keystore.
+- `ANDROID_KEY_PASSWORD`
+  Password for alias `upload-key`.
+
+### Branch mapping in CI
+
+- `develop` -> test/distribute `Debug`
+- `master` -> test/distribute `Debug`
+- `release` -> test/distribute `Release`
 
 ---
 

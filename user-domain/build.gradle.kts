@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tymex.interview.user_domain"
+    namespace = "com.githubusersbrowser.user_domain"
     compileSdk = 35
 
     defaultConfig {
