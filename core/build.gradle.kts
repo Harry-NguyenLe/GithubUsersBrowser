@@ -19,23 +19,21 @@ plugins {
 }
 
 android {
-    namespace = "com.tymex.interview.core"
+    namespace = "com.githubusersbrowser.core"
     compileSdk = 35
 
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        buildConfigField(
+            "String",
+            "GITHUB_API_TOKEN",
+            "\"${getLocalProperty("GITHUB_API_TOKEN", project)}\""
+        )
     }
 
     buildTypes {
-        debug {
-            buildConfigField(
-                "String",
-                "GITHUB_API_TOKEN",
-                "\"${getLocalProperty("GITHUB_API_TOKEN", project)}\""
-            )
-        }
         release {
             isMinifyEnabled = false
             proguardFiles(
